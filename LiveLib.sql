@@ -137,11 +137,12 @@ CREATE TABLE IF NOT EXISTS "users" (
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     nick VARCHAR(128) NOT NULL,
+    sex INT DEFAULT NULL,
     photo_path_id INT DEFAULT NULL,
     CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE
     SET NULL,
-        description TEXT DEFAULT NULL,
-        password VARCHAR(128) NOT NULL
+    description TEXT DEFAULT NULL,
+    password VARCHAR(128) NOT NULL
 );
 INSERT INTO users (first_name, last_name, nick, passwords)
 VALUES ('Irina', 'Suslova', 'suslik1978', '12201978');
