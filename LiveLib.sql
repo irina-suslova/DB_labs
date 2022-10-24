@@ -17,6 +17,7 @@
 -- DROP TABLE book_author;
 -- DROP TABLE authors;
 -- DROP TABLE books;
+-- DROP TABLE publishers;
 -- DROP TABLE sources;
 CREATE TABLE IF NOT EXISTS "sources" (
     source_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -27,16 +28,27 @@ CREATE TABLE IF NOT EXISTS "sources" (
 );
 INSERT INTO sources (system_path)
 VALUES ('/home/alexesn/Desktop/MEPhI/DB_labs/cover.jpg');
+------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "publishers" (
+    publisher_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ NULL,
+    name VARCHAR(128) UNIQUE NOT NULL
+);
+INSERT INTO publishers (name)
+VALUES ('CreateSpace Independent Publishing Platform');
 -----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "books" (
     book_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at TIMESTAMPTZ DEFAULT NULL,
-    title VARCHAR(128) NOT NULL,
+    title VARCHAR(256) NOT NULL,
     description TEXT NOT NULL,
     release_date TIMESTAMPTZ NOT NULL,
-    publisher TEXT NOT NULL,
+    publisher_id INT NOT NULL,
+    CONSTRAINT publisher_fk FOREIGN KEY(publisher_id) REFERENCES publishers(publisher_id) ON DELETE SET NULL,
     cover_path_id INT NOT NULL,
     CONSTRAINT cover_fk FOREIGN KEY(cover_path_id) REFERENCES sources(source_id) ON DELETE
     SET NULL
