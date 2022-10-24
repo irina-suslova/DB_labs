@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS "authors" (
     photo_path_id INT DEFAULT NULL,
     CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE
     SET NULL,
-        description TEXT NOT NULL,
+        description TEXT DEFAULT NULL,
         year_of_birth TIMESTAMPTZ NOT NULL,
         year_of_death TIMESTAMPTZ DEFAULT NULL
 );
@@ -112,3 +112,93 @@ CREATE TABLE book_author (
 );
 -- INSERT INTO book_author (book_id, author_id)
 -- VALUES (1, 1);
+
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "users" (
+    user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    first_name VARCHAR(128) NOT NULL,
+    last_name VARCHAR(128) NOT NULL,
+    nick VARCHAR(128) NOT NULL,
+    photo_path_id INT DEFAULT NULL,
+    CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE SET NULL,
+    description TEXT DEFAULT NULL,
+    password VARCHAR(128) NOT NULL
+);
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "friends" (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    user_id_1 INT REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    user_id_2 INT REFERENCES users(user_id) ON UPDATE CASCADE
+);
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "rewords" (
+    reword_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    description TEXT DEFAULT NULL
+);
+----------------------------------------------------------------
+CREATE TABLE user_reword (
+    user_id INT REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    reword_id INT REFERENCES rewords(reword_id) ON UPDATE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    CONSTRAINT user_reword_pk PRIMARY KEY (user_id, reword_id)
+);
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "marks" (
+    mark_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    type_of_marked_object VARCHAR(128) NOT NULL,
+    value_of_mark INT DEFAULT 0 NOT NULL,
+    CONSTRAINT value_of_mark_from_0_to_5 CHECK (value_of_mark >= 0 AND user_book_type_id <= 5)
+)
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "dialog" (
+    dialog_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    dialog_title VARCHAR(128) NOT NULL,
+    description TEXT DEFAULT NULL
+)
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "article" (
+    article_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    user_id INT NOT NULL,
+    CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    dialog_id INT NOT NULL,
+    CONSTRAINT dialog_id_fk FOREIGN KEY(dialog_id) REFERENCES dialogs(dialog_id) ON DELETE SET NULL,
+    text TEXT DEFAULT NULL
+)
+----------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "user_book_types" (
+    user_book_type_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    deleted_at TIMESTAMPTZ DEFAULT NULL,
+    user_book_type_name VARCHAR(128) NOT NULL
+)
+----------------------------------------------------------------
+CREATE TABLE user_book (
+    user_id INT REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    book_id INT REFERENCES books(author_id) ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT user_book_pk PRIMARY KEY (user_id, book_id),
+    user_book_type_id INT,
+    CONSTRAINT user_book_type_id_fk FOREIGN KEY(user_book_type_id) REFERENCES user_book_types(user_book_type_id) ON DELETE SET NULL,
+)
