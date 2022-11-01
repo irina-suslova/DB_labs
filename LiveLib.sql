@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "books" (
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at TIMESTAMPTZ DEFAULT NULL,
     title VARCHAR(256) NOT NULL,
-    description TEXT NOT NULL,
+    description TEXT DEFAULT NULL,
     release_date TIMESTAMPTZ NOT NULL,
     publisher_id INT NOT NULL,
     CONSTRAINT publisher_fk FOREIGN KEY(publisher_id) REFERENCES publishers(publisher_id) ON DELETE SET NULL,
@@ -76,11 +76,10 @@ CREATE TABLE IF NOT EXISTS "authors" (
     first_name VARCHAR(128) NOT NULL,
     last_name VARCHAR(128) NOT NULL,
     photo_path_id INT DEFAULT NULL,
-    CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE
-    SET NULL,
-        description TEXT DEFAULT NULL,
-        year_of_birth TIMESTAMPTZ NOT NULL,
-        year_of_death TIMESTAMPTZ DEFAULT NULL
+    CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE SET NULL,
+    description TEXT DEFAULT NULL,
+    year_of_birth TIMESTAMPTZ NOT NULL,
+    year_of_death TIMESTAMPTZ DEFAULT NULL
 );
 INSERT INTO authors (
         first_name,
@@ -111,14 +110,12 @@ CREATE TABLE IF NOT EXISTS "genres" (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at TIMESTAMPTZ DEFAULT NULL,
-    name VARCHAR(128) UNIQUE NOT NULL,
-    description TEXT NOT NULL
+    name VARCHAR(128) UNIQUE NOT NULL
 );
-INSERT INTO genres (name, description)
+INSERT INTO genres (name)
 VALUES (
-        'Novel',
-        'A fictitious prose narrative of book length, typically representing character and action with some degree of realism.'
-    );
+        'Novel'
+        );
 ----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "book_genre" (
     book_id INT REFERENCES genres(genre_id) ON UPDATE CASCADE ON DELETE
@@ -144,9 +141,9 @@ CREATE TABLE IF NOT EXISTS "users" (
     description TEXT DEFAULT NULL,
     password VARCHAR(128) NOT NULL
 );
-INSERT INTO users (first_name, last_name, nick, passwords)
+INSERT INTO users (first_name, last_name, nick, password)
 VALUES ('Irina', 'Suslova', 'suslik1978', '12201978');
-INSERT INTO users (first_name, last_name, nick, passwords)
+INSERT INTO users (first_name, last_name, nick, password)
 VALUES ('Alex', 'Yesis', 'alexesn2015', '12112015');
 ----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "quotes" (
@@ -214,26 +211,30 @@ CREATE TABLE IF NOT EXISTS "friends" (
 INSERT INTO friends (user_id_1, user_id_2)
 VALUES (1, 2);
 ----------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS "rewords" (
-    reword_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS "rewards" (
+    reward_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at TIMESTAMPTZ DEFAULT NULL,
+    name VARCHAR(128) UNIQUE NOT NULL,
+    photo_path_id INT DEFAULT NULL,
+    CONSTRAINT photo_path_fk FOREIGN KEY(photo_path_id) REFERENCES sources(source_id) ON DELETE
+    SET NULL,
     description TEXT DEFAULT NULL
 );
-INSERT INTO rewords (description)
-VALUES('Best book');
+INSERT INTO rewards (name, description)
+VALUES('Best book', '1M likes');
 ----------------------------------------------------------------
-CREATE TABLE user_reword (
+CREATE TABLE user_reward (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
     deleted_at TIMESTAMPTZ DEFAULT NULL,
     user_id INT REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE
     SET NULL,
-        reword_id INT REFERENCES rewords(reword_id) ON UPDATE CASCADE,
-        CONSTRAINT user_reword_pk PRIMARY KEY (user_id, reword_id)
+    reward_id INT REFERENCES rewards(reward_id) ON UPDATE CASCADE,
+        CONSTRAINT user_reward_pk PRIMARY KEY (user_id, reward_id)
 );
-INSERT INTO user_reword (user_id, reword_id)
+INSERT INTO user_reward (user_id, reward_id)
 VALUES (1, 1);
 ----------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "user_book_types" (
@@ -269,8 +270,8 @@ CREATE TABLE IF NOT EXISTS "dialogs" (
     user_id INT NOT NULL,
     CONSTRAINT user_id_fk FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE
     SET NULL,
-        dialog_title VARCHAR(128) NOT NULL,
-        description TEXT DEFAULT NULL
+    dialog_title VARCHAR(128) NOT NULL,
+    description TEXT DEFAULT NULL
 );
 INSERT INTO dialogs (user_id, dialog_title)
 VALUES(1, 'Dialog');
