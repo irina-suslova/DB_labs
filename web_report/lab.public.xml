@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="lab" schema="public" type="PostgreSQL - 12.12 (Ubuntu 12.12-0ubuntu0.20.04.1)">
+   <tables>
+      <table name="articles" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="article_id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="dialog_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="dialog_id" foreignKey="dialog_id_fk" implied="false" onDeleteCascade="false" schema="public" table="dialogs"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="text" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="article_id" sequenceNumberInPK="1"/>
+         <index name="articles_pkey" unique="true">
+            <column ascending="true" name="article_id"/>
+         </index>
+      </table>
+      <table name="authors" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="author_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="author_id" foreignKey="book_author_author_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="book_author"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="first_name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="last_name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="photo_path_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="source_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="sources"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="8" name="year_of_birth" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="9" name="year_of_death" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <primaryKey column="author_id" sequenceNumberInPK="1"/>
+         <index name="authors_pkey" unique="true">
+            <column ascending="true" name="author_id"/>
+         </index>
+      </table>
+      <table name="book_author" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_author_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="author_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="author_id" foreignKey="book_author_author_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="authors"/>
+         </column>
+         <primaryKey column="book_id" sequenceNumberInPK="1"/>
+         <primaryKey column="author_id" sequenceNumberInPK="2"/>
+         <index name="book_author_pk" unique="true">
+            <column ascending="true" name="book_id"/>
+            <column ascending="true" name="author_id"/>
+         </index>
+      </table>
+      <table name="book_genre" numRows="99" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_genre_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="genre_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="genre_id" foreignKey="book_genre_genre_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="genres"/>
+         </column>
+         <primaryKey column="book_id" sequenceNumberInPK="1"/>
+         <primaryKey column="genre_id" sequenceNumberInPK="2"/>
+         <index name="book_genre_pk" unique="true">
+            <column ascending="true" name="book_id"/>
+            <column ascending="true" name="genre_id"/>
+         </index>
+      </table>
+      <table name="book_selection" numRows="891" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_selection_book_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="selection_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="selection_id" foreignKey="book_selection_selection_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="selections"/>
+         </column>
+         <primaryKey column="book_id" sequenceNumberInPK="1"/>
+         <primaryKey column="selection_id" sequenceNumberInPK="2"/>
+         <index name="book_selection_pk" unique="true">
+            <column ascending="true" name="book_id"/>
+            <column ascending="true" name="selection_id"/>
+         </index>
+      </table>
+      <table name="books" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="book_id" foreignKey="book_author_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="book_author"/>
+            <child column="book_id" foreignKey="book_genre_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="book_genre"/>
+            <child column="book_id" foreignKey="book_selection_book_id_fkey" implied="false" onDeleteCascade="true" schema="public" table="book_selection"/>
+            <child column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="false" schema="public" table="quotes"/>
+            <child column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="true" schema="public" table="reviews"/>
+            <child column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="true" schema="public" table="stories"/>
+            <child column="book_id" foreignKey="user_book_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="user_book"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="title" nullable="false" remarks="" size="256" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="6" name="release_date" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="publisher_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="publisher_id" foreignKey="publisher_fk" implied="false" onDeleteCascade="false" schema="public" table="publishers"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="cover_path_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="source_id" foreignKey="cover_fk" implied="false" onDeleteCascade="false" schema="public" table="sources"/>
+         </column>
+         <primaryKey column="book_id" sequenceNumberInPK="1"/>
+         <index name="books_pkey" unique="true">
+            <column ascending="true" name="book_id"/>
+         </index>
+      </table>
+      <table name="dialogs" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="dialog_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="dialog_id" foreignKey="dialog_id_fk" implied="false" onDeleteCascade="false" schema="public" table="articles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="dialog_title" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="dialog_id" sequenceNumberInPK="1"/>
+         <index name="dialogs_pkey" unique="true">
+            <column ascending="true" name="dialog_id"/>
+         </index>
+      </table>
+      <table name="friends" numRows="200" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_id_1" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="friends_user_id_1_fkey" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="user_id_2" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="friends_user_id_2_fkey" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="friends_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="genres" numRows="31" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="genre_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="genre_id" foreignKey="book_genre_genre_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="book_genre"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <primaryKey column="genre_id" sequenceNumberInPK="1"/>
+         <index name="genres_pkey" unique="true">
+            <column ascending="true" name="genre_id"/>
+         </index>
+         <index name="genres_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="marks" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="mark_id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="type_of_marked_object" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="5" name="value_of_mark" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="mark_id" sequenceNumberInPK="1"/>
+         <index name="marks_pkey" unique="true">
+            <column ascending="true" name="mark_id"/>
+         </index>
+         <checkConstraint constraint="(((value_of_mark &gt;= 0) AND (value_of_mark &lt;= 5)))" name="value_of_mark_from_0_to_5"/>
+      </table>
+      <table name="publishers" numRows="53" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="publisher_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="publisher_id" foreignKey="publisher_fk" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <primaryKey column="publisher_id" sequenceNumberInPK="1"/>
+         <index name="publishers_pkey" unique="true">
+            <column ascending="true" name="publisher_id"/>
+         </index>
+         <index name="publishers_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="quotes" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="quote_id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="book_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="user_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="text" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="quote_id" sequenceNumberInPK="1"/>
+         <index name="quotes_pkey" unique="true">
+            <column ascending="true" name="quote_id"/>
+         </index>
+      </table>
+      <table name="reviews" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="review_id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="true" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="text" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="rating" nullable="false" remarks="" size="5" type="int2" typeCode="5"/>
+         <primaryKey column="review_id" sequenceNumberInPK="1"/>
+         <index name="reviews_pkey" unique="true">
+            <column ascending="true" name="review_id"/>
+         </index>
+         <checkConstraint constraint="(((rating &gt;= 0) AND (rating &lt;= 5)))" name="rating_from_0_to_5"/>
+      </table>
+      <table name="rewards" numRows="7" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="reward_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="reward_id" foreignKey="user_reward_reward_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="user_reward"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="photo_path_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="source_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="sources"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="reward_id" sequenceNumberInPK="1"/>
+         <index name="rewards_pkey" unique="true">
+            <column ascending="true" name="reward_id"/>
+         </index>
+         <index name="rewards_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="selections" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="selection_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="selection_id" foreignKey="book_selection_selection_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="book_selection"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="author_user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="author_user_fk" implied="false" onDeleteCascade="true" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="title" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="selection_id" sequenceNumberInPK="1"/>
+         <index name="selections_pkey" unique="true">
+            <column ascending="true" name="selection_id"/>
+         </index>
+      </table>
+      <table name="sources" numRows="300" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="source_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="photo_path_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="authors"/>
+            <child column="cover_path_id" foreignKey="cover_fk" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+            <child column="photo_path_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="rewards"/>
+            <child column="photo_path_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="system_path" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="source_id" sequenceNumberInPK="1"/>
+         <index name="sources_pkey" unique="true">
+            <column ascending="true" name="source_id"/>
+         </index>
+      </table>
+      <table name="stories" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="story_id" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="book_fk" implied="false" onDeleteCascade="true" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="text" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="story_id" sequenceNumberInPK="1"/>
+         <index name="stories_pkey" unique="true">
+            <column ascending="true" name="story_id"/>
+         </index>
+      </table>
+      <table name="user_book" numRows="291" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_book_user_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="book_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="book_id" foreignKey="user_book_book_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="books"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="user_book_type_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_book_type_id" foreignKey="user_book_type_id_fk" implied="false" onDeleteCascade="false" schema="public" table="user_book_types"/>
+         </column>
+         <primaryKey column="user_id" sequenceNumberInPK="1"/>
+         <primaryKey column="book_id" sequenceNumberInPK="2"/>
+         <index name="user_book_pk" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="book_id"/>
+         </index>
+      </table>
+      <table name="user_book_types" numRows="6" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="user_book_type_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="user_book_type_id" foreignKey="user_book_type_id_fk" implied="false" onDeleteCascade="false" schema="public" table="user_book"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="user_book_type_name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <primaryKey column="user_book_type_id" sequenceNumberInPK="1"/>
+         <index name="user_book_types_pkey" unique="true">
+            <column ascending="true" name="user_book_type_id"/>
+         </index>
+         <index name="user_book_types_user_book_type_name_key" unique="true">
+            <column ascending="true" name="user_book_type_name"/>
+         </index>
+      </table>
+      <table name="user_reward" numRows="99" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="0" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="user_id" foreignKey="user_reward_user_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="reward_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="reward_id" foreignKey="user_reward_reward_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="rewards"/>
+         </column>
+         <primaryKey column="user_id" sequenceNumberInPK="1"/>
+         <primaryKey column="reward_id" sequenceNumberInPK="2"/>
+         <index name="user_reward_pk" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="reward_id"/>
+         </index>
+      </table>
+      <table name="users" numRows="100" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="user_id" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="user_id" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" schema="public" table="articles"/>
+            <child column="user_id" foreignKey="user_id_fk" implied="false" onDeleteCascade="false" schema="public" table="dialogs"/>
+            <child column="user_id_1" foreignKey="friends_user_id_1_fkey" implied="false" onDeleteCascade="false" schema="public" table="friends"/>
+            <child column="user_id_2" foreignKey="friends_user_id_2_fkey" implied="false" onDeleteCascade="false" schema="public" table="friends"/>
+            <child column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="false" schema="public" table="quotes"/>
+            <child column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="reviews"/>
+            <child column="author_user_id" foreignKey="author_user_fk" implied="false" onDeleteCascade="true" schema="public" table="selections"/>
+            <child column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="selections"/>
+            <child column="user_id" foreignKey="user_fk" implied="false" onDeleteCascade="true" schema="public" table="stories"/>
+            <child column="user_id" foreignKey="user_book_user_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="user_book"/>
+            <child column="user_id" foreignKey="user_reward_user_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="user_reward"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="1" name="created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="6" id="2" name="updated_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="deleted_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="first_name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="last_name" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="nick" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="NULL::character varying" digits="0" id="7" name="sex" nullable="true" remarks="" size="6" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="photo_path_id" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="source_id" foreignKey="photo_path_fk" implied="false" onDeleteCascade="false" schema="public" table="sources"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="description" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="password" nullable="false" remarks="" size="128" type="varchar" typeCode="12"/>
+         <primaryKey column="user_id" sequenceNumberInPK="1"/>
+         <index name="users_pkey" unique="true">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+   </tables>
+</database>
